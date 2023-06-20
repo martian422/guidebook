@@ -4,6 +4,8 @@
 
 目前本教程包括CUDA和CONDA的安装示例。-2023/6/9
 
+新增了连接离线服务器的办法。-2023/6/20
+
 ## 1.如何正确安装CUDA？(以11.7为例)
 
 ### #1 下载.runfile
@@ -64,3 +66,38 @@ conda create -n NAME python=3.8 -y && conda activate NAME
 ```
 
 此时你的终端左侧应该就会出现标识当前环境的*(NAME)*了。
+
+## 3.如何连接离线服务器？
+
+当一台服务器掉电或迁移位置之后，可能会由于掉盘，IP变化等原因无法进行远程连接，此时我们需要携带一台有网线接口的笔记本电脑前往机房，使用网线将笔记本电脑与服务器相连后进行操作。
+
+注：此处默认服务器ssh服务正常运作，如若异常，可使用
+
+```bash
+sudo systemctl restart sshd.service
+```
+
+重启ssh服务。此外，此处默认服务器使用静态IP，如果使用动态IP(DHCP)，步骤1中可能无法通过输入其之前IP来连接（Z可能发生变化）。
+
+#### 1.ipv4配置。
+
+为了让笔记本能与服务器进行通信，需要对网络进行配置。
+
+找到“更改适配器选项”，点击配置对应以太网的属性。
+
+<img src="./pictures/network config0.png" alt="step5" style="zoom:80%;" />
+
+设服务器断电前能正常远程访问的IP地址为X.Y.Z.A，在此处则应该将IP地址设置为X.Y.Z.B，B可为任意1~255之间的整数（推荐设置为1）,且B≠A，以保证你的笔记本与服务器处于同一局域网内。
+
+子网掩码默认设置为255.255.255.0即可。
+
+<img src="./pictures/network config.png" alt="step5" style="zoom:60%;" />
+
+#### 2.使用ssh连接服务器。
+
+在cmd或powershell中使用惯用的ssh命令连接即可：
+
+```bash
+ssh -p PORT_NUM username@X.Y.Y.A 
+```
+
