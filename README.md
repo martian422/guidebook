@@ -98,6 +98,5 @@ sudo systemctl restart sshd.service
 在cmd或powershell中使用惯用的ssh命令连接即可：
 
 ```bash
-ssh -p PORT_NUM username@X.Y.Y.A 
+ssh -p PORT_NUM username@X.Y.Z.A 
 ```
-
