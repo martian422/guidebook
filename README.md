@@ -8,11 +8,38 @@
 
 ## 1.如何正确安装CUDA？(以11.7为例)
 
+### #0 查看现有CUDA及CUDA Toolkit版本
+
+使用nvidia-smi命令可查看当前的系统CUDA版本。安装CUDA驱动时最好不要超过该版本。
+
+使用nvcc -V命令可查看当前CUDA编译驱动版本（一般来说要安装或者改变的就是这个）。
+
+如果nvcc -V显示的版本与你想要的不符，建议首先使用
+
+```bash
+ls /usr/local
+```
+
+查看该目录下有无你想要的cuda-x.x文件夹，如果有，直接使用
+
+```bash
+#11.7换成你想使用且该目录下存在的版本
+echo -e "PATH=\"/usr/local/cuda-11.7/bin:\$PATH\"\nLD_LIBRARY_PATH=\"/usr/local/cuda-11.7/lib64:\$LD_LIBRARY_PATH\"" >> ~/.bashrc
+
+# 更新bashrc
+source ~/.bashrc 
+
+# 应当会显示你需要的CUDA版本了。
+nvcc -V 
+```
+
+如果没有，再根据以下步骤进行操作。
+
 ### #1 下载.runfile
 
 直接必应搜索你想下载的版本是最快的（例：“CUDA 11.7"，第一个就是）
 
-***注意系统版本号！！！***
+***注意ubuntu系统版本号！使用lsb_release -a命令查询。***
 
 运行网页中给出的wget命令即可将安装文件下载到服务器本地。
 
@@ -21,8 +48,8 @@
 ### #2 运行.runfile
 
 ```bash
-#此步修改文件权限，有时可忽略，为了保险就加上了。
-#版本号与截图中略有差异，以下载版本为准（输入./cuda按tab补全）
+#第一步提权一般可忽略，是因为可能该文件之前已存在，所有者不是你。
+#版本号与截图中略有差异，以下载版本为准
 chmod 777 cuda_11.7.1_515.65.01_linux.run 
 sudo ./cuda_11.7.1_515.65.01_linux.run
 ```
@@ -37,7 +64,7 @@ sudo ./cuda_11.7.1_515.65.01_linux.run
 
 <img src="./pictures/step4.png" alt="step4" style="zoom:50%;" />
 
-**这一步选no，否则会覆盖系统的CUDA！**
+**这一步选no，否则会覆盖系统的CUDA！（11.7以下低版本中选择‘upgrade’那一项）**
 
 <img src="./pictures/step5.png" alt="step5" style="zoom:50%;" />
 
@@ -45,10 +72,12 @@ sudo ./cuda_11.7.1_515.65.01_linux.run
 
 ```bash
 echo -e "PATH=\"/usr/local/cuda-11.7/bin:\$PATH\"\nLD_LIBRARY_PATH=\"/usr/local/cuda-11.7/lib64:\$LD_LIBRARY_PATH\"" >> ~/.bashrc
+
 # 更新bashrc
 source ~/.bashrc 
+
+# 应当会显示你需要的CUDA版本了。
 nvcc -V 
-# 应当会显示11.7，此时你的账户使用的CUDA版本就是这个了。
 ```
 
 ## 2.如何安装conda？(以miniconda为例)
