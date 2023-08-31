@@ -12,6 +12,8 @@
 
 使用nvidia-smi命令可查看当前的系统CUDA版本。安装CUDA驱动时最好不要超过该版本。
 
+**倘若存在越级，请参考#3。**
+
 使用nvcc -V命令可查看当前CUDA编译驱动版本（一般来说要安装或者改变的就是这个）。
 
 如果nvcc -V显示的版本与你想要的不符，建议首先使用
@@ -79,6 +81,35 @@ source ~/.bashrc
 # 应当会显示你需要的CUDA版本了。
 nvcc -V 
 ```
+
+### #3 升级CUDA版本
+
+倘若你要使用的项目需求的CUDA版本超过了当前nvidia-smi显示的版本，用echo强行指定高版本驱动可能出现问题。因为linux升级驱动可能（往往）需要删除之前的驱动，此时你应当**首先咨询服务器管理员**解决办法，得到许可后再进行升级操作。操作过程中建议仅使用命令行，不开启图形界面。
+
+```bash
+#删除已经安装的nvidia包
+sudo apt-get purge nvidia-*
+
+#增加下载nvidia驱动的源
+sudo add-apt-repository ppa:graphics-drivers/ppa 
+
+#这一步不一定能让你直接安装成功驱动，但能获取并配置好你安装驱动所需要的工具链（最后的数字与你要安装的驱动的版本号一致）
+sudo apt-get install nvidia-driver-515
+
+#重启，之后试试nvidia-smi，大概率还是不行，继续安装
+sudo reboot 
+
+#参考1、2把runfile下载到本地并且安装
+sudo sh cuda_11.7.0_515.43.04_linux.run
+```
+
+**注意：与#2中不同，此时安装一定要勾选Driver（建议全部勾选），并且在选择是否update synlink时选择yes。**
+
+### #4 事后
+
+依赖原cuda编译和安装的pytorch相关库可能会在运行时出一些迷惑问题，建议在更换版本/更新驱动后重新配置你的conda环境（指新建一个环境从头装起）以避免奇怪的bug。
+
+
 
 ## 2.如何安装conda？(以miniconda为例)
 
