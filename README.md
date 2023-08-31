@@ -6,6 +6,8 @@
 
 新增了连接离线服务器的办法。-2023/6/20
 
+新增了升级CUDA的办法。 -2023/8/31
+
 ## 1.如何正确安装CUDA？(以11.7为例)
 
 ### #0 查看现有CUDA及CUDA Toolkit版本
@@ -87,6 +89,7 @@ nvcc -V
 倘若你要使用的项目需求的CUDA版本超过了当前nvidia-smi显示的版本，用echo强行指定高版本驱动可能出现问题。因为linux升级驱动可能（往往）需要删除之前的驱动，此时你应当**首先咨询服务器管理员**解决办法，得到许可后再进行升级操作。操作过程中建议仅使用命令行，不开启图形界面。
 
 ```bash
+#此处以11.7版本为例
 #删除已经安装的nvidia包
 sudo apt-get purge nvidia-*
 
@@ -96,18 +99,22 @@ sudo add-apt-repository ppa:graphics-drivers/ppa
 #这一步不一定能让你直接安装成功驱动，但能获取并配置好你安装驱动所需要的工具链（最后的数字与你要安装的驱动的版本号一致）
 sudo apt-get install nvidia-driver-515
 
-#重启，之后试试nvidia-smi，大概率还是不行，继续安装
+#重启，之后试试nvidia-smi，大概率它无法正常显示，继续安装
 sudo reboot 
 
 #参考1、2把runfile下载到本地并且安装
-sudo sh cuda_11.7.0_515.43.04_linux.run
-```
 
-**注意：与#2中不同，此时安装一定要勾选Driver（建议全部勾选），并且在选择是否update synlink时选择yes。**
+#####
+#注意：与#2中不同，此时安装一定要勾选Driver（建议全部勾选），并且在选择是否update synlink时选择yes。
+#####
+sudo sh cuda_11.7.0_515.43.04_linux.run
+
+#使用0中的办法更新你的CUDA路径，之后nvidia-smi应该可以显示并且为你想要的版本了。
+```
 
 ### #4 事后
 
-依赖原cuda编译和安装的pytorch相关库可能会在运行时出一些迷惑问题，建议在更换版本/更新驱动后重新配置你的conda环境（指新建一个环境从头装起）以避免奇怪的bug。
+依赖原CUDA编译和安装的pytorch相关库可能会在运行时出一些迷惑问题，建议在更换版本/更新驱动后重新配置你的conda环境（指新建一个环境从头装起）以避免奇怪的bug。
 
 
 
@@ -126,6 +133,8 @@ conda create -n NAME python=3.8 -y && conda activate NAME
 ```
 
 此时你的终端左侧应该就会出现标识当前环境的*(NAME)*了。
+
+
 
 ## 3.如何连接离线服务器？
 
