@@ -53,8 +53,14 @@ nvcc -V
 
 ```bash
 #第一步提权一般可忽略，是因为可能该文件之前已存在，所有者不是你。
-#版本号与截图中略有差异，以下载版本为准
-chmod 777 cuda_11.7.1_515.65.01_linux.run 
+#版本号与截图中略有差异，以下载版本为准。
+chmod 777 cuda_11.7.1_515.65.01_linux.run
+#如果服务器在nvcc时没有显示任何版本，可能它处于准裸机状态，连gcc都没有。
+#这种情况下直接sh可能会报错然后浪费时间。
+#为了避免这种情况，（对于未安装nvcc的机器）您应该首先执行如下命令：
+sudo apt-get update
+sudo apt-get install gcc
+#此时遇到restart问题请全部取消勾选，不影响（常见于ubuntu2202版本）。
 sudo sh ./cuda_11.7.1_515.65.01_linux.run
 ```
 
@@ -68,7 +74,7 @@ sudo sh ./cuda_11.7.1_515.65.01_linux.run
 
 <img src="./pictures/step4.png" alt="step4" style="zoom:50%;" />
 
-**这一步选no，否则会覆盖系统的CUDA！（11.7以下低版本中选择‘upgrade’那一项）**
+**对于nvcc有显示的这一步务必选no，否则会覆盖系统的CUDA！（11.7以下低版本中选择‘upgrade’那一项）**
 
 <img src="./pictures/step5.png" alt="step5" style="zoom:50%;" />
 
